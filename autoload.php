@@ -11,34 +11,19 @@
 
  /* TODO: add credits to https://github.com/quadlayers/wpautoload */
 
-// use Composer\Factory;
-// // use QuadLayers\WP_Autoloader\Cache;
-// use Composer\Json\JsonFile;
 use QuadLayers\WP_Autoloader\Autoloader;
-
-// $file    = new JsonFile( Factory::getComposerFile() );
-// $content = $file->read();
-
-$content = array(
-	'extra' => array(
-		'quadlayers/wp-autoload' => array(
-			'\\QuadLayers\\Perfect_Woocommerce_Brands\\' => 'lib/',
-		),
-	),
-);
-
-if ( empty( $content['extra']['quadlayers/wp-autoload'] ) ) {
-	return;
-}
 
 $dir = __DIR__ . '../../../../';
 
-// $dir   = dirname( Factory::getComposerFile() ) . '/';
-// $cache = new Cache();
+$jsonContent = file_get_contents( $dir . '/composer.json' );
+$composer = json_decode( $jsonContent, true );
 
-foreach ( $content['extra']['quadlayers/wp-autoload'] as $prefix => $folder ) {
+if ( empty( $composer['extra']['quadlayers/autoload'] ) ) {
+	return;
+}
+
+foreach ( $composer['extra']['quadlayers/autoload'] as $prefix => $folder ) {
 
 	/* TODO: validar con classmap, tiene que existir folder */
-
 	new Autoloader( $prefix, $dir . $folder );
 }
