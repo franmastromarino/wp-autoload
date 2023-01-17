@@ -54,7 +54,7 @@ class Autoloader {
 	 * @param string $folder Path to folder.
 	 * @param Cache  $cache  Cache.
 	 */
-	public function __construct( $prefix, $folder, Cache $cache ) {
+	public function __construct( $prefix, $folder/* , Cache $cache */ ) {
 		$this->prefix = ltrim( $prefix, '\\' );
 		$this->folder = $folder;
 		// $this->cache  = $cache;
@@ -114,7 +114,8 @@ class Autoloader {
 		// $this->cache->clear_garbage();
 		// throw new Exception( $class, $path );
 
-		__doing_it_wrong( __METHOD__, sprintf('Class %s not found. File path not found %s', $class, $path) );
+		_doing_it_wrong( __METHOD__, sprintf('Class %s not found. File path not found %s', $class, $path), '1.0.0' );
+
 	}
 
 }
