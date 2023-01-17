@@ -1,0 +1,34 @@
+{
+    "name": "quadlayers/wp-autoload",
+    "description": "Composer package with autoload for WordPress.",
+    "type": "library",
+    "keywords": [
+        "WordPress",
+        "autoload"
+    ],
+    "homepage": "https://quadlayers.com/",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "QuadLayers",
+            "email": "noreply@quadlayers.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/quadlayers/wp-autoload/issues"
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+	"autoload": {
+		"psr-4": {
+			"QuadLayers\\WP_Autoloader\\": "src/"
+		},
+		"files": [
+			"autoload.php"
+		]
+	},
+	"require": {
+		"php": ">=5.4.0"
+	}
+}
+    
