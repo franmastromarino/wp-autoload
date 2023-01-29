@@ -12,7 +12,7 @@
  use QuadLayers\WP_Autoload\Autoloader;
 
  $vendorDir      = dirname( __DIR__ );
- $baseDir        = realpath(dirname( $vendorDir . '../../../../' ));
+ $baseDir        = realpath( dirname( $vendorDir . '../../../../' ) );
  $namespaceCache = __DIR__ . '/namespace.php';
 
 if ( ! file_exists( $namespaceCache ) ) {

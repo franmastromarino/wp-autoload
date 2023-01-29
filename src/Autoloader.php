@@ -58,7 +58,7 @@ class Autoloader {
 			return;
 		}
 
-		$path = $this->file_path( $class );
+		$path = $this->filePath( $class );
 
 		require_once $path;
 	}
@@ -72,7 +72,7 @@ class Autoloader {
 	 *
 	 * @throws Exception Class not found.
 	 */
-	private function file_path( $class ) {
+	private function filePath( $class ) {
 		$class        = str_replace( $this->namespace, '', $class );
 		$plugin_parts = explode( '\\', $class );
 		$name         = array_pop( $plugin_parts );

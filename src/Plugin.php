@@ -8,7 +8,6 @@
  * @link      https://github.com/quadlayers/wp-autoload
  * @copyright Copyright (c) 2023
  * @license   GPL-3.0
- * @credits   https://github.com/Automattic/jetpack-autoloader
  */
 
 // phpcs:disable PHPCompatibility.Keywords.NewKeywords.t_useFound
