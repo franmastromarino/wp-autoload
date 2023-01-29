@@ -31,9 +31,7 @@
 		"composer-plugin-api": "^2.1.0"
 	},
 	"require-dev": {
-		"composer/composer": "^2.2 || ^2.4",
-		"yoast/phpunit-polyfills": "1.0.4",
-		"automattic/jetpack-changelogger": "^3.3.1"
+		"composer/composer": "^2.1"
 	},
 	"extra": {
 		"class": "QuadLayers\\WP_Autoload\\Plugin"
