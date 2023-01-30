@@ -24,7 +24,7 @@
 			"QuadLayers\\WP_Autoload\\": "src/"
 		},
 		"files": [
-			"autoload.php"
+			"wp-autoload.php"
 		]
 	},
 	"require": {
