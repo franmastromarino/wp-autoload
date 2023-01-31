@@ -61,7 +61,8 @@ You can also run the `composer dump-autoload --no-dev` or `composer dump-autoloa
 Create optimized files and remove the need to use autoload classmap.
 
 ## Credits
-This plugin have been based on [Jetpack Autoloader](https://github.com/Automattic/jetpack-autoloader) and [WP Autoload](https://github.com/wppunk/wpautoload).
+This plugin have been based on [Jetpack Autoloader](https://github.com/Automattic/jetpack-autoloader) and [Composer WordPress Autoloader
+](https://github.com/alleyinteractive/composer-wordpress-autoloader).
 
 ## Contribute
 Thats it! develop with WordPress naming conventions, run autoload command, and forget about us... I'm kidding; smush the stars button and contribute with this project. :D
