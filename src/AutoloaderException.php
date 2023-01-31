@@ -1,5 +1,4 @@
 <?php
-
 /**
  * QuadLayers WP Autoload
  *
@@ -9,27 +8,24 @@
  * @copyright Copyright (c) 2023
  * @license   GPL-3.0
  */
+
 namespace QuadLayers\WP_Autoload;
 
 /**
- * Class Exception
+ * Class AutoloaderException
  *
  * @package quadlayers/wp-autoload
  */
-class Exception extends \Exception {
+class AutoloaderException extends \Exception {
 
 	/**
 	 * Exception constructor.
 	 *
-	 * @param string $class Class name.
+	 * @param string $className Class name.
 	 * @param string $path  Expected path.
 	 */
-	public function __construct( $class, $path ) {
-		$message = '<strong>QuadLayers/WP_Autoload/Exception</strong>: ';
-
-		$message .= '<em>' . $class . '</em> is not found in <code>' . $path . '<code>';
-
-		parent::__construct( $message );
+	public function __construct( $className, $path ) {
+		parent::__construct( '<em>' . $className . '</em> is not found in <code>' . $path . '<code>' );
 	}
 
 }

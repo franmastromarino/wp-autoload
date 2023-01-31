@@ -22,10 +22,7 @@
 	"autoload": {
 		"psr-4": {
 			"QuadLayers\\WP_Autoload\\": "src/"
-		},
-		"files": [
-			"wp-autoload.php"
-		]
+		}
 	},
 	"require": {
 		"composer-plugin-api": "^2.1.0"

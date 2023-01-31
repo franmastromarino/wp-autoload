@@ -1,5 +1,4 @@
 <?php
-
 /**
  * QuadLayers WP Autoload
  *
@@ -9,85 +8,192 @@
  * @copyright Copyright (c) 2023
  * @license   GPL-3.0
  */
+
 namespace QuadLayers\WP_Autoload;
 
-use QuadLayers\WP_Autoload\Exception;
+use QuadLayers\WP_Autoload\AutoloaderException;
 
 /**
- * Class Autoloader
+ * Class Autoloader.
  *
- * @package quadlayers/wp-autoload
+ * @package quadlayers/wp-autoloader
  */
 class Autoloader {
-
 	/**
-	 * Prefix for your namespace
+	 * Namespace to autoload.
 	 *
 	 * @var string
 	 */
-	private $namespace;
+	protected string $namespace;
+
 	/**
-	 * Path to folder
+	 * Root path of the namespace to load from.
 	 *
 	 * @var string
 	 */
-	private $folder;
+	protected string $rootPath;
 
 	/**
-	 * Autoloader constructor.
+	 * Missing classes for the autoloader.
 	 *
-	 * @param string $namespace Prefix for your namespace.
-	 * @param string $folder Path to folder.
+	 * @var bool[]
+	 * @psalm-var array<string, bool>
 	 */
-	public function __construct( $namespace, $folder ) {
-		$this->namespace = ltrim( $namespace, '\\' );
-		$this->folder    = $folder;
+	protected array $missingClasses = array();
 
-		spl_autoload_register( array( $this, 'autoload' ) );
+	/**
+	 * Generate an autoloader for the WordPress file naming conventions.
+	 *
+	 * @param string $namespace Namespace to autoload.
+	 * @param string $rootPath Path in which to look for files.
+	 * @return static Function for spl_autoload_register().
+	 */
+	public static function generate( string $namespace, string $rootPath ): callable {
+		return new static( $namespace, $rootPath );
 	}
 
 	/**
-	 * Autoloader files for custom plugins
+	 * Constructor.
 	 *
-	 * @param string $class Full class name.
-	 *
-	 * @throws Exception Class not found.
+	 * @param string $namespace Namespace to register.
+	 * @param string $rootPath Root path of the namespace.
 	 */
-	public function autoload( $class ) {
-		if ( 0 !== strpos( $class, $this->namespace ) ) {
+	public function __construct( string $namespace, string $rootPath ) {
+		$this->namespace = $namespace;
+		/**
+		 * Ensure consistent root.
+		 */
+		$this->rootPath = rtrim( $rootPath, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
+	}
+
+
+	function testHasNamespace( $className ) {
+		$len = strlen( $this->namespace );
+		return ( substr( $className, 0, $len ) === $this->namespace );
+	}
+
+	/**
+	 * Check if a class was missing from the autoloader.
+	 *
+	 * @param string $className Class to check.
+	 * @return bool
+	 */
+	private function isValidNamespace( string $className ): bool {
+
+		if ( 0 !== \strpos( $className, $this->namespace ) && 0 !== \strpos( '\\' . $className, $this->namespace ) ) {
+			return false;
+		}
+
+		return true;
+
+	}
+	/**
+	 * Check if a class was missing from the autoloader.
+	 *
+	 * @param string $className Class to check.
+	 * @return bool
+	 */
+	private function isMissingClass( string $className ): bool {
+		return isset( $this->missingClasses[ $className ] );
+	}
+
+	/**
+	 * Register the autoloader.
+	 */
+	public function register() {
+		spl_autoload_register( $this );
+	}
+
+	/**
+	 * Unregister the autoloader.
+	 */
+	public function unregister() {
+		spl_autoload_unregister( $this );
+	}
+
+	/**
+	 * Invoke method of the class.
+	 *
+	 * @param string $className Class being autoloaded.
+	 */
+	public function __invoke( string $className ) {
+
+		if ( ! $this->isValidNamespace( $className ) ) {
 			return;
 		}
 
-		$path = $this->filePath( $class );
+		/**
+		 * Check if the class was previously not found.
+		 */
+		if ( $this->isMissingClass( $className ) ) {
+			return;
+		}
 
-		require_once $path;
+		$classFilePath = $this->getClassFilePath( $className );
+
+		if ( $classFilePath ) {
+			require_once $classFilePath;
+		} else {
+			/**
+			 * Mark the class as not found to save future lookups.
+			 */
+			$this->missingClasses[ $className ] = true;
+		}
 	}
 
 	/**
-	 * Find file path by namespace
+	 * Find a file for the given class.
 	 *
-	 * @param string $class Full class name.
-	 *
-	 * @return string
-	 *
-	 * @throws Exception Class not found.
+	 * @param string $className Class to find.
+	 * @return string|null
 	 */
-	private function filePath( $class ) {
-		$class        = str_replace( $this->namespace, '', $class );
-		$plugin_parts = explode( '\\', $class );
-		$name         = array_pop( $plugin_parts );
-		$name         = preg_match( '/^(Interface|Trait)/', $name )
-			? $name . '.php'
-			: 'class-' . $name . '.php';
-		$local_path   = implode( '/', $plugin_parts ) . '/' . $name;
-		$local_path   = strtolower( str_replace( array( '\\', '_' ), array( '/', '-' ), $local_path ) );
+	protected function getClassFilePath( string $className ): ?string {
 
-		$path = $this->folder . '/' . $local_path;
-		if ( file_exists( $path ) ) {
-			return $path;
+		/**
+		 * Break up the classname into parts.
+		 */
+		$parts = \explode( '\\', $className );
+
+		/**
+		 * Retrieve the class name (last item) and convert it to a filename.
+		 */
+		$class    = \strtolower( \str_replace( '_', '-', \array_pop( $parts ) ) );
+		$basePath = '';
+
+		/**
+		 * Build the base path relative to the sub-namespace.
+		 */
+		$subNamespace = \substr( \implode( DIRECTORY_SEPARATOR, $parts ), \strlen( $this->namespace ) );
+
+		if ( ! empty( $subNamespace ) ) {
+			$basePath = \str_replace( '_', '-', \strtolower( $subNamespace ) );
 		}
 
-		throw new Exception( __METHOD__, sprintf( 'Class %s not found. File path not found %s', $class, $path ) );
-	}
+		/**
+		 * Support multiple locations since the file could be a class, trait, interface or enum.
+		 */
+		$paths = array(
+			'%1$s' . DIRECTORY_SEPARATOR . 'class-%2$s.php',
+			'%1$s' . DIRECTORY_SEPARATOR . 'trait-%2$s.php',
+			'%1$s' . DIRECTORY_SEPARATOR . 'interface-%2$s.php',
+			'%1$s' . DIRECTORY_SEPARATOR . 'enum-%2$s.php',
+		);
 
+		/*
+		* Attempt to find the file by looping through the various paths.
+		*
+		* Autoloading a class will also cause a trait or interface with the
+		* same fully qualified name to be autoloaded, as it's impossible to
+		* tell which was requested.
+		*/
+		foreach ( $paths as $path ) {
+			$path = $this->rootPath . \sprintf( $path, $basePath, $class );
+
+			if ( \file_exists( $path ) ) {
+				return $path;
+			}
+		}
+
+		throw new AutoloaderException( $className, $path );
+	}
 }
