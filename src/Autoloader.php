@@ -66,21 +66,23 @@ class Autoloader {
 		$this->rootPath = rtrim( $rootPath, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR;
 	}
 
-
-	function testHasNamespace( $className ) {
-		$len = strlen( $this->namespace );
-		return ( substr( $className, 0, $len ) === $this->namespace );
-	}
-
 	/**
 	 * Check if a class was missing from the autoloader.
 	 *
 	 * @param string $className Class to check.
 	 * @return bool
 	 */
+	
 	private function isValidNamespace( string $className ): bool {
 
-		if ( 0 !== \strpos( $className, $this->namespace ) && 0 !== \strpos( '\\' . $className, $this->namespace ) ) {
+		/**
+		 * Ensure the namespace ends with a backslash.
+		 */
+		$namespace = "$this->namespace\\";
+		/**
+		 * Ensure the namespace is at the beginning of the class name.
+		 */
+		if ( 0 !== \strpos( $className, $namespace ) ) {
 			return false;
 		}
 
