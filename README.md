@@ -41,8 +41,8 @@ composer require quadlayers/wp-autoload --dev
 	},
 	"extra": {
 		"quadlayers/wp-autoload": {
-			"My_Plugin_Namespace\\": "src/",
-			"My_Plugin_Namespace_2\\": "lib/"
+			"My_Plugin_Namespace": "src/",
+			"My_Plugin_Namespace_2": "lib/"
 		}
 	}
 }
