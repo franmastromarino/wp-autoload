@@ -79,7 +79,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 		$this->autoloadPackage = new FileAutoloadFilePackageCreate(
 			$this->composer,
 			$this->io,
-			$this->filesystem,
+			$this->filesystem
 		);
 		/**
 		 * Instance autoload FileAutoloadComposerUpdate.
@@ -88,7 +88,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 			$this->composer,
 			$this->io,
 			$this->filesystem,
-			$this->autoloadPackage 
+			$this->autoloadPackage
 		);
 	}
 
@@ -98,7 +98,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 	 * @param Composer    $composer Composer object.
 	 * @param IOInterface $io IO object.
 	 */
-	public function deactivate( Composer $composer, IOInterface $io ) {		
+	public function deactivate( Composer $composer, IOInterface $io ) {
 		/*
 		 * Intentionally left empty. This is a PluginInterface method.
 		 */
@@ -136,7 +136,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 		 * When the autoloader is not required by the root package we don't want to execute it.
 		 * This prevents unwanted transitive execution that generates unused autoloaders or
 		 * at worst throws fatal executions.
-		 */		
+		 */
 		if ( ! $this->isRequiredByRoot() ) {
 			exit();
 		}
@@ -175,7 +175,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 
 		if ( empty( $devRequires ) ) {
 			$this->io->writeError( "\n<error>QuadLayers WP Autoload error:", true );
-			$this->io->writeError( "The package should be required in dev.</error>", true );
+			$this->io->writeError( 'The package should be required in dev.</error>', true );
 			return false;
 		}
 
@@ -191,7 +191,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 	/**
 	 * Checks to see whether or not the autoloader is configured correctly.
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	private function isValidConfig() {
 
@@ -200,11 +200,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 		$autoload     = $this->composer->getPackage()->getAutoload();
 		$vendorDir    = $config->get( 'vendor-dir' );
 		$vendorFolder = $config->raw()['config']['vendor-dir'];
-		
+
 		/**
 		 * Validate the vendor directory.
 		 */
-		if ( 'vendor' !== $vendorFolder ) {			
+		if ( 'vendor' !== $vendorFolder ) {
 			$this->io->writeError( "\n<error>QuadLayers WP Autoload error:", true );
 			$this->io->writeError( 'The project\'s composer.json or composer environment set a non-default vendor directory.', true );
 			$this->io->writeError( 'The default composer vendor directory must be used.</error>', true );
@@ -214,7 +214,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 		/**
 		 * Validate the autoload configuration.
 		 */
-		if ( empty( $autoload['classmap'] ) || ! is_array( $autoload['classmap'] ) ) {			
+		if ( empty( $autoload['classmap'] ) || ! is_array( $autoload['classmap'] ) ) {
 			$this->io->writeError( "\n<error>QuadLayers WP Autoload error:", true );
 			$this->io->writeError( 'The "classmap" autoload is required to generate optimized autoload.</error>', true );
 			return false;
@@ -223,7 +223,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface {
 		/**
 		 * Validate the extra configuration.
 		 */
-		if ( ! isset( $extra['quadlayers/wp-autoload'] ) || ! is_array( $extra['quadlayers/wp-autoload'] )  ) {			
+		if ( ! isset( $extra['quadlayers/wp-autoload'] ) || ! is_array( $extra['quadlayers/wp-autoload'] ) ) {
 			$this->io->writeError( "\n<error>QuadLayers WP Autoload error:", true );
 			$this->io->writeError( 'The "quadlayers/wp-autoload" must be defined.</error>', true );
 			return false;

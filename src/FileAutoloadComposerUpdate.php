@@ -52,7 +52,7 @@ class FileAutoloadComposerUpdate extends ComposerAutoloadGenerator {
 	private $autoloadPackage;
 
 	/**
-	 * vendorPath.
+	 * Vendor path.
 	 *
 	 * @var string.
 	 */
@@ -61,14 +61,15 @@ class FileAutoloadComposerUpdate extends ComposerAutoloadGenerator {
 	/**
 	 * Constructor.
 	 *
-	 * @param Composer    $composer
-	 * @param IOInterface $io
-	 * @param Filesystem  $filesystem
+	 * @param Composer                      $composer object.
+	 * @param IOInterface                   $io object.
+	 * @param Filesystem                    $filesystem object.
+	 * @param FileAutoloadFilePackageCreate $autoloadPackage object.
 	 */
 	public function __construct( Composer $composer, IOInterface $io, Filesystem $filesystem, FileAutoloadFilePackageCreate $autoloadPackage ) {
-		$this->composer   = $composer;
-		$this->io         = $io;
-		$this->filesystem = $filesystem;
+		$this->composer        = $composer;
+		$this->io              = $io;
+		$this->filesystem      = $filesystem;
 		$this->autoloadPackage = $autoloadPackage;
 		/**
 		 * Get the vendor directory.
@@ -82,13 +83,10 @@ class FileAutoloadComposerUpdate extends ComposerAutoloadGenerator {
 
 	/**
 	 * Updates the autoload file.
-	 *
-	 * @param array $namespacesPaths
-	 * @return string
 	 */
 	public function update(): void {
 
-		if (! $this->filesystem->filePutContentsIfModified( $this->getFilePath(), $this->getContent())) {			
+		if ( ! $this->filesystem->filePutContentsIfModified( $this->getFilePath(), $this->getContent() ) ) {
 			$this->io->writeError( "\n<error>QuadLayers WP Autoload error:", true );
 			$this->io->write( 'Can\'t inject autoload into vendor/autoload.php.</error>' );
 			exit();
@@ -102,9 +100,6 @@ class FileAutoloadComposerUpdate extends ComposerAutoloadGenerator {
 
 	/**
 	 * Deletes the autoload file.
-	 *
-	 * @param array $namespacesPaths
-	 * @return string
 	 */
 	public function delete(): void {
 		if ( $this->filesystem->remove( $this->getFilePath() ) ) {
@@ -115,12 +110,12 @@ class FileAutoloadComposerUpdate extends ComposerAutoloadGenerator {
 	/**
 	 * Create the autoloader file contents to write to vendor/wordpress-autoload.php.
 	 *
-	 * @param array $namespacesPaths The rules to use to generate the autoloader.
 	 * @return string
+	 * @throws RuntimeException If the autoloader file could not be found.
 	 */
 	protected function getContent(): string {
-		
-		$filename   = basename( $this->autoloadPackage->getFilePath());
+
+		$filename   = basename( $this->autoloadPackage->getFilePath() );
 		$autoloader = file_get_contents( $this->composer->getConfig()->get( 'vendor-dir' ) . '/autoload.php' );
 
 		$contents = preg_replace_callback(
@@ -141,7 +136,7 @@ AUTOLOADER;
 			},
 			$autoloader,
 			1,
-			$count,
+			$count
 		);
 
 		if ( ! $count ) {

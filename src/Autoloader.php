@@ -24,14 +24,14 @@ class Autoloader {
 	 *
 	 * @var string
 	 */
-	protected string $namespace;
+	protected $namespace;
 
 	/**
 	 * Root path of the namespace to load from.
 	 *
 	 * @var string
 	 */
-	protected string $rootPath;
+	protected $rootPath;
 
 	/**
 	 * Missing classes for the autoloader.
@@ -39,7 +39,7 @@ class Autoloader {
 	 * @var bool[]
 	 * @psalm-var array<string, bool>
 	 */
-	protected array $missingClasses = array();
+	protected $missingClasses = array();
 
 	/**
 	 * Generate an autoloader for the WordPress file naming conventions.
@@ -72,7 +72,6 @@ class Autoloader {
 	 * @param string $className Class to check.
 	 * @return bool
 	 */
-	
 	private function isValidNamespace( string $className ): bool {
 
 		/**
@@ -148,6 +147,7 @@ class Autoloader {
 	 *
 	 * @param string $className Class to find.
 	 * @return string|null
+	 * @throws AutoloaderException If the file could not be found.
 	 */
 	protected function getClassFilePath( string $className ): ?string {
 

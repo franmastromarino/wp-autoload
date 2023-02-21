@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Example Project" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+
+	<description>QuadLayers PHPCS rules</description>
+
+	<!-- Configs -->
+	<config name="minimum_supported_wp_version" value="4.7" />
+	<config name="testVersion" value="7.1-" />
+
+	<!-- Exclude paths -->
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/jetpack_vendor/*</exclude-pattern>
+	<exclude-pattern>*/tests/*</exclude-pattern>
+
+	<!-- Add in some extra rules from other standards. -->
+	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+	<rule ref="Generic.Commenting.Todo"/>
+
+	<!-- Exclude WordPress rules. -->
+	<rule ref="WordPress">
+		<exclude name="Core.Commenting.CommentTags.AuthorTag" />
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax" />
+		<exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect" />
+		<exclude name="WordPress.Files"/>
+		<exclude name="WordPress.Security"/>
+		<exclude name="WordPress.PHP" />
+		<exclude name="WordPress.WP" />
+		<exclude name="WordPress.NamingConventions" />
+	</rule>
+
+	<!-- Exclude tests folder. -->
+	<rule ref="PHPCompatibility">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+
+</ruleset>

@@ -18,10 +18,14 @@
 		"issues": "https://github.com/quadlayers/wp-autoload/issues"
 	},
 	"prefer-stable": true,
-	"minimum-stability": "dev",
+	"minimum-stability": "stable",
 	"config": {
 		"platform": {
 			"php": "7.3.0"
+		},
+		"allow-plugins": {
+			"automattic/jetpack-composer-plugin": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
 	},
 	"autoload": {
@@ -34,9 +38,19 @@
 		"composer-plugin-api": "^2.1.0"
 	},
 	"require-dev": {
-		"composer/composer": "^2.1"
+		"composer/composer": "^2.1",
+		"wp-coding-standards/wpcs": "^2.3.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+        "phpcompatibility/phpcompatibility-wp": "^2.1.0"
 	},
 	"extra": {
 		"class": "QuadLayers\\WP_Autoload\\Plugin"
+	},
+	"scripts": {
+		"test:phpunit": "./vendor/bin/phpunit phpunit",
+		"build": "composer install --no-dev && composer dump-autoload -o --no-dev",
+		"phpcs:report:csv": "./vendor/bin/phpcs --warning-severity=0 --extensions=php --report=csv --report-file=./phpcs_error.csv ./src",
+		"phpcs:report:txt": "./vendor/bin/phpcs --warning-severity=0 --extensions=php --report-file=./phpcs_error.txt ./src",
+		"phpcs:report:autofix": "./vendor/bin/phpcbf ./src"
 	}
 }

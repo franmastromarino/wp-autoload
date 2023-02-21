@@ -1,0 +1,25 @@
+# Set the default behavior for all files.
+* text=auto
+
+# Normalized and converts to
+# native line endings on checkout.
+*.php text
+
+# Convert to LF line endings on checkout.
+*.php text eol=lf
+
+# Exclude files from the package.
+.vscode  	    		export-ignore
+.editorconfig   		export-ignore
+.eslintignore  	    	export-ignore
+.eslintrc.json 	    	export-ignore
+.gitignore  	    	export-ignore
+.gitattributes  		export-ignore
+.lintstagedrc  	    	export-ignore
+.prettierignore  		export-ignore
+composer.json  	    	export-ignore
+composer.lock  	    	export-ignore
+phpcs_error.csv			export-ignore
+phpcs_error.txt			export-ignore
+phpcs.xml				export-ignore
+vendor					export-ignore

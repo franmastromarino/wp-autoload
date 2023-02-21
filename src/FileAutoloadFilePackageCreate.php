@@ -45,28 +45,28 @@ class FileAutoloadFilePackageCreate extends ComposerAutoloadGenerator {
 	private $filesystem;
 
 	/**
-	 * vendorPath.
+	 * Vendor path.
 	 *
 	 * @var string.
 	 */
 	private $vendorPath;
 
 	/**
-	 * vendorPathCode.
+	 * Vendor path code.
 	 *
 	 * @var string.
 	 */
 	private $vendorPathCode;
 
 	/**
-	 * basePath.
+	 * Project base path.
 	 *
 	 * @var string.
 	 */
 	private $basePath;
 
 	/**
-	 * basePathCode.
+	 * Project base path code.
 	 *
 	 * @var string.
 	 */
@@ -75,9 +75,9 @@ class FileAutoloadFilePackageCreate extends ComposerAutoloadGenerator {
 	/**
 	 * Constructor.
 	 *
-	 * @param Composer    $composer
-	 * @param IOInterface $io
-	 * @param Filesystem  $filesystem
+	 * @param Composer    $composer object.
+	 * @param IOInterface $io object.
+	 * @param Filesystem  $filesystem object.
 	 */
 	public function __construct( Composer $composer, IOInterface $io, Filesystem $filesystem ) {
 		$this->composer   = $composer;
@@ -113,25 +113,19 @@ class FileAutoloadFilePackageCreate extends ComposerAutoloadGenerator {
 
 	/**
 	 * Creates the autoload file.
-	 *
-	 * @param array $namespacesPaths
-	 * @return string
 	 */
 	public function create(): void {
 
 		$fileContent = $this->getContent();
 
 		if ( $this->filesystem->filePutContentsIfModified( $this->getFilePath(), $fileContent ) ) {
-			$this->io->write("<info>QuadLayers WP Autoload created.</info>");
+			$this->io->write( '<info>QuadLayers WP Autoload created.</info>' );
 		}
 
 	}
 
 	/**
 	 * Deletes the autoload file.
-	 *
-	 * @param array $namespacesPaths
-	 * @return string
 	 */
 	public function delete(): void {
 		if ( $this->filesystem->remove( $this->getFilePath() ) ) {
@@ -142,7 +136,6 @@ class FileAutoloadFilePackageCreate extends ComposerAutoloadGenerator {
 	/**
 	 * Create the autoloader file contents to write to vendor/wordpress-autoload.php.
 	 *
-	 * @param array $namespacesPaths The rules to use to generate the autoloader.
 	 * @return string
 	 */
 	protected function getContent(): string {
@@ -176,7 +169,7 @@ AUTOLOAD;
 			$autoloadFileContents .= sprintf(
 				'    %s => array(%s),',
 				var_export( $namespace, true ),
-				$path,
+				$path
 			) . PHP_EOL;
 		}
 
@@ -188,7 +181,6 @@ AUTOLOAD;
 	/**
 	 * Creates the autoload file content.
 	 *
-	 * @param array $namespacesPaths
 	 * @return array
 	 */
 	private function getValidNamespaces(): array {
