@@ -114,25 +114,23 @@ class FileAutoloadComposerUpdate extends ComposerAutoloadGenerator {
 	 * @throws RuntimeException If the autoloader file could not be found.
 	 */
 	protected function getContent(): string {
-		$filename   = basename($this->autoloadPackage->getFilePath());
-		$autoloader = file_get_contents($this->composer->getConfig()->get('vendor-dir') . '/autoload.php');
 
-		// Remove the opening PHP tag from the existing autoloader
-		$autoloader = ltrim($autoloader, '<?php');
+		$filename   = basename( $this->autoloadPackage->getFilePath() );
+		$autoloader = file_get_contents( $this->composer->getConfig()->get( 'vendor-dir' ) . '/autoload.php' );
 
 		$contents = preg_replace_callback(
 			'/^return (.*);$/m',
-			function ($matches) use ($filename) {
+			function ( $matches ) use ( $filename ) {
 				$autoloader = <<<AUTOLOADER
-	/*
-	  QuadLayers WP Autoload injected by quadlayers/wp-autoload
-	*/
-	require_once __DIR__ . '/{$filename}';
+\$loader = {$matches[1]};
 
-	\$loader = {$matches[1]};
+/*
+  QuadLayers WP Autoload injected by quadlayers/wp-autoload
+*/
+require_once __DIR__ . '/{$filename}';
 
-	return \$loader;
-	AUTOLOADER;
+return \$loader;
+AUTOLOADER;
 
 				return "$autoloader\n";
 			},
@@ -141,16 +139,12 @@ class FileAutoloadComposerUpdate extends ComposerAutoloadGenerator {
 			$count
 		);
 
-		if (!$count) {
-			throw new RuntimeException('Error finding proper place to inject autoloader.');
+		if ( ! $count ) {
+			throw new RuntimeException( 'Error finding proper place to inject autoloader.' );
 		}
-
-		// Prepend the opening PHP tag to the modified autoloader
-		$contents = "<?php\n\n" . $contents;
 
 		return $contents;
 	}
-
 
 	/**
 	 * Retrieve the file path for the autoloader file.
